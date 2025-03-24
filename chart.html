@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chart Preparation Status</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .chart-container {
+      max-width: 500px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      animation: fadeIn 1s ease-in;
+    }
+
+    .chart-container input,
+    .chart-container select {
+      padding: 0.8rem;
+      width: 85%;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .chart-container button {
+      padding: 0.8rem 1.5rem;
+      background: #e63946;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+
+    .chart-container button:hover {
+      background: #d62828;
+    }
+
+    .chart-result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      text-align: left;
+    }
+
+    .loading {
+      color: #999;
+      margin-top: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>IRCTC CLONE</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="trains.html">Trains</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="pnr.html">PNR Status</a>
+      <a href="chart.html">Chart Availability</a>
+      <a href="status.html">Live Train Status</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="chart-container">
+      <h2>Chart Preparation Status</h2>
+      <p>Check if the chart is prepared for your train</p>
+      <input type="text" id="trainNumber" placeholder="Enter Train Number" />
+
+      <select id="boardingStation">
+        <option value="">Select Boarding Station</option>
+        <option>Achirne</option>
+        <option>Adavali</option>
+        <option>Anjani</option>
+        <option>Aravali Road</option>
+        <option>Bhoke</option>
+        <option>Chiplun</option>
+        <option>Dadar</option>
+        <option>Diwankhavati</option>
+        <option>Goregaon Road</option>
+        <option>Indapur</option>
+        <option>Kadavai</option>
+        <option>Kalambani Budruk</option>
+        <option>Kamathe</option>
+        <option>Kankavali</option>
+        <option>Karanjadi</option>
+        <option>Karmali</option>
+        <option>Kharepatan</option>
+        <option>Khed</option>
+        <option>Kolad</option>
+        <option>Kudal</option>
+        <option>Madure</option>
+        <option>Majorda</option>
+        <option>Mangaon</option>
+        <option>Nandgaon Road</option>
+        <option>Nivasar</option>
+        <option>Panvel</option>
+        <option>Pernem</option>
+        <option>Rajapur Road</option>
+        <option>Ratnagiri</option>
+        <option>Roha</option>
+        <option>Sangameshwar Road</option>
+        <option>Sape Wamane</option>
+        <option>Saward</option>
+        <option>Sawantwadi Road</option>
+        <option>Sindhudurg</option>
+        <option>Suravali</option>
+        <option>Thane</option>
+        <option>Thivim</option>
+        <option>Ukshi</option>
+        <option>Vaibhavwadi Road</option>
+        <option>Veravali</option>
+        <option>Verna</option>
+        <option>Veer</option>
+        <option>Vilhavade</option>
+        <option>Vinhere</option>
+        <option>Vasai</option>
+        <option>Zarap</option>
+      </select>
+
+      <br />
+      <button onclick="checkChart()">Check Chart Status</button>
+      <div id="loading" class="loading" style="display:none;">Checking chart status...</div>
+      <div id="chartResult" class="chart-result"></div>
+    </div>
+  </main>
+
+  <script>
+    function checkChart() {
+      const train = document.getElementById("trainNumber").value.trim();
+      const station = document.getElementById("boardingStation").value;
+      const result = document.getElementById("chartResult");
+      const loading = document.getElementById("loading");
+
+      result.innerHTML = "";
+      if (!train || !station) {
+        result.innerHTML = "❌ Please enter both Train Number and select a Boarding Station.";
+        return;
+      }
+
+      loading.style.display = "block";
+
+      setTimeout(() => {
+        loading.style.display = "none";
+        const prepared = Math.random() > 0.5;
+        result.innerHTML = `
+          🚆 <strong>Train:</strong> ${train}<br>
+          🛤 <strong>Boarding Station:</strong> ${station}<br>
+          📊 <strong>Chart Status:</strong> ${
+            prepared
+              ? "<span style='color:green;'>Prepared ✅</span>"
+              : "<span style='color:orange;'>Not Yet Prepared ❌</span>"
+          }
+        `;
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

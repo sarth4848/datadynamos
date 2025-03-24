@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PNR Status</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .pnr-container {
+      max-width: 500px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .pnr-container input {
+      padding: 0.8rem;
+      width: 80%;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .pnr-container button {
+      background: #ff595e;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .pnr-container button:hover {
+      background: #ff4242;
+    }
+
+    .pnr-result {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .loading {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>IRCTC CLONE</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="trains.html">Trains</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="pnr.html">PNR Status</a>
+      <a href="chart.html">Chart Availability</a>
+      <a href="status.html">Live Train Status</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="pnr-container">
+      <h2>Check Your PNR Status</h2>
+      <input type="text" id="pnrInput" placeholder="Enter 10-digit PNR number" maxlength="10">
+      <br>
+      <button onclick="checkPNR()">Check Status</button>
+      <div id="loading" class="loading" style="display: none;">Checking status...</div>
+      <div id="pnrResult" class="pnr-result"></div>
+    </div>
+  </main>
+
+  <script>
+    function checkPNR() {
+      const pnr = document.getElementById('pnrInput').value.trim();
+      const resultDiv = document.getElementById('pnrResult');
+      const loading = document.getElementById('loading');
+
+      resultDiv.innerHTML = "";
+      if (pnr.length !== 10 || isNaN(pnr)) {
+        resultDiv.innerHTML = "❌ Please enter a valid 10-digit PNR number.";
+        return;
+      }
+
+      loading.style.display = 'block';
+      setTimeout(() => {
+        loading.style.display = 'none';
+        resultDiv.innerHTML = `
+          ✅ <strong>PNR:</strong> ${pnr}<br>
+          <strong>Train:</strong> Konkan Express (10111)<br>
+          <strong>Date:</strong> 26-Mar-2025<br>
+          <strong>From:</strong> Mumbai CST<br>
+          <strong>To:</strong> Madgaon<br>
+          <strong>Status:</strong> Confirmed (B2, Seat 45)<br>
+        `;
+      }, 1500); // Simulated delay
+    }
+  </script>
+</body>
+</html>

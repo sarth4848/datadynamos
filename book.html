@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+<script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <title>Book Train Ticket</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f7f4ef;
+      margin: 0;
+    }
+
+    header {
+      background: #222;
+      color: white;
+      padding: 1rem 2rem;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    nav a {
+      color: #fdd835;
+      margin-right: 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .booking-container {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #c1121f;
+    }
+
+    label {
+      display: block;
+      margin: 0.7rem 0 0.2rem;
+      font-weight: 600;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      font-size: 1rem;
+      background: #e63946;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #d62828;
+    }
+
+    .confirmation {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1.1rem;
+      color: green;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>IRCTC CLONE</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="trains.html">Trains</a>
+      <a href="book.html">Book Ticket</a>
+      <a href="pnr.html">PNR Status</a>
+    </nav>
+  </header>
+
+  <div class="booking-container">
+    <h2>Book Your Train Ticket</h2>
+
+    <label for="from">From</label>
+    <select id="from">
+      <option value="">Select Station</option>
+      <option>Dadar</option><option>Thane</option><option>Panvel</option><option>Chiplun</option><option>Ratnagiri</option><option>Madure</option>
+    </select>
+
+    <label for="to">To</label>
+    <select id="to">
+      <option value="">Select Station</option>
+      <option>Dadar</option><option>Thane</option><option>Panvel</option><option>Chiplun</option><option>Ratnagiri</option><option>Madure</option>
+    </select>
+
+    <label for="date">Travel Date</label>
+    <input type="date" id="date" />
+
+    <label for="class">Class</label>
+    <select id="class">
+      <option value="">Select Class</option>
+      <option value="2s">Second Sitting (2S)</option>
+      <option value="sl">Sleeper (SL)</option>
+      <option value="3ac">Third AC (3A)</option>
+      <option value="2ac">Second AC (2A)</option>
+      <option value="1ac">First AC (1A)</option>
+    </select>
+
+    <label for="quota">Quota</label>
+    <select id="quota">
+      <option value="">Select Quota</option>
+      <option>General</option>
+      <option>Tatkal</option>
+      <option>Premium Tatkal</option>
+    </select>
+
+    <label for="category">Passenger Category</label>
+    <select id="category">
+      <option value="">Select Category</option>
+      <option>Regular</option>
+      <option>Senior Citizen</option>
+      <option>Women</option>
+    </select>
+
+    <label for="payment">Payment Mode</label>
+    <select id="payment">
+      <option value="">Select Payment Method</option>
+      <option>UPI</option>
+      <option>Credit Card</option>
+      <option>Net Banking</option>
+    </select>
+
+    <label for="captcha">Enter Captcha: <strong id="captchaText"></strong></label>
+    <input type="text" id="captcha" placeholder="Enter captcha here" />
+
+    <button onclick="bookTicket()">Book Ticket</button>
+    <div class="confirmation" id="confirmation"></div>
+  </div>
+
+  <script>
+    function isTatkalTime() {
+      const now = new Date();
+      const hour = now.getHours();
+      return hour >= 10 && hour < 11;
+    }
+
+    // Restrict quota options outside 10-11 AM
+    document.addEventListener("DOMContentLoaded", () => {
+      const quota = document.getElementById("quota");
+      const captchaText = document.getElementById("captchaText");
+      captchaText.innerText = generateCaptcha();
+
+      quota.addEventListener("change", () => {
+        const selected = quota.value;
+        if ((selected === "Tatkal" || selected === "Premium Tatkal") && !isTatkalTime()) {
+          alert("⏰ Tatkal and Premium Tatkal booking is allowed only between 10:00 AM and 11:00 AM.");
+          quota.value = "";
+        }
+      });
+    });
+
+    function generateCaptcha() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let text = "";
+      for (let i = 0; i < 5; i++) {
+        text += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return text;
+    }
+
+    function calculateFare(trainClass, quota) {
+      let base = 0;
+      switch (trainClass) {
+        case "2s": base = 80; break;
+        case "sl": base = 150; break;
+        case "3ac": base = 300; break;
+        case "2ac": base = 500; break;
+        case "1ac": base = 800; break;
+        default: base = 0;
+      }
+      if (quota === "Tatkal") base += 100;
+      if (quota === "Premium Tatkal") base += 200;
+      return base;
+    }
+
+    function bookTicket() {
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+      const date = document.getElementById("date").value;
+      const quota = document.getElementById("quota").value;
+      const category = document.getElementById("category").value;
+      const trainClass = document.getElementById("class").value;
+      const captcha = document.getElementById("captcha").value;
+      const payment = document.getElementById("payment").value;
+      const confirmation = document.getElementById("confirmation");
+      const correctCaptcha = document.getElementById("captchaText").innerText;
+
+      if (!from || !to || !date || !quota || !category || !trainClass || !payment || !captcha) {
+        confirmation.style.color = "red";
+        confirmation.innerText = "⚠️ Please fill all fields and captcha.";
+        return;
+      }
+
+      if (captcha !== correctCaptcha) {
+        confirmation.style.color = "red";
+        confirmation.innerText = "❌ Incorrect captcha. Please try again.";
+        return;
+      }
+
+      const fare = calculateFare(trainClass, quota);
+      confirmation.style.color = "green";
+      confirmation.innerHTML = `✅ Ticket booked from <strong>${from}</strong> to <strong>${to}</strong> on <strong>${date}</strong><br>Class: <strong>${trainClass.toUpperCase()}</strong>, Quota: <strong>${quota}</strong><br>Fare: ₹<strong>${fare}</strong><br>Paid via: <strong>${payment}</strong>`;
+    }
+  </script>
+<!-- Ticket Preview Modal -->
+<div id="ticketModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;">
+  <div id="ticketContent" style="background:white; padding:20px; border-radius:12px; width:80%; max-width:500px; position:relative; animation:fadeIn 0.4s;">
+    <h3 style="text-align:center; color:#c1121f;">Train Ticket</h3>
+    <div id="ticketDetails" style="line-height:1.7;"></div>
+    <div style="text-align:center; margin-top:1rem;">
+      <button onclick="downloadTicket()" style="background:#007bff; color:white; padding:10px 20px; border:none; border-radius:6px; margin:5px;">Download PDF</button>
+      <button onclick="closeModal()" style="background:#e63946; color:white; padding:10px 20px; border:none; border-radius:6px;">Close</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

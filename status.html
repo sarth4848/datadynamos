@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Train Status</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .status-container {
+      max-width: 500px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      animation: fadeIn 1s ease-in;
+    }
+
+    .status-container input {
+      padding: 0.8rem;
+      width: 80%;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .status-container button {
+      padding: 0.8rem 1.5rem;
+      background: #ff595e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .status-container button:hover {
+      background: #ff4242;
+    }
+
+    .status-result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      text-align: left;
+    }
+
+    .loading {
+      color: #999;
+      margin-top: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>IRCTC CLONE</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="trains.html">Trains</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="pnr.html">PNR Status</a>
+      <a href="chart.html">Chart Availability</a>
+      <a href="status.html">Live Train Status</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="status-container">
+      <h2>Live Train Status</h2>
+      <p>Enter your train number or name:</p>
+      <input type="text" id="trainInput" placeholder="e.g. 10103 or Mandovi Express">
+      <br>
+      <button onclick="checkLiveStatus()">Check Status</button>
+      <div id="loading" class="loading" style="display:none;">Fetching live data...</div>
+      <div id="statusResult" class="status-result"></div>
+    </div>
+  </main>
+
+  <script>
+    function checkLiveStatus() {
+      const trainInput = document.getElementById('trainInput').value.trim();
+      const result = document.getElementById('statusResult');
+      const loading = document.getElementById('loading');
+
+      result.innerHTML = "";
+      if (!trainInput) {
+        result.innerHTML = "❌ Please enter a valid train name or number.";
+        return;
+      }
+
+      // Ask for body sensor (simulated)
+      const sensorConsent = confirm("Allow access to body sensor data (simulated)?");
+      if (!sensorConsent) {
+        result.innerHTML = "❌ Permission denied for body sensors.";
+        return;
+      }
+
+      // Geolocation
+      if (!navigator.geolocation) {
+        result.innerHTML = "❌ Geolocation not supported by your browser.";
+        return;
+      }
+
+      loading.style.display = 'block';
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude.toFixed(4);
+        const lon = position.coords.longitude.toFixed(4);
+        const fakeSpeed = (40 + Math.random() * 60).toFixed(2); // Simulate speed
+
+        setTimeout(() => {
+          loading.style.display = 'none';
+          result.innerHTML = `
+            🚆 <strong>Train:</strong> ${trainInput}<br>
+            📍 <strong>Location:</strong> Lat ${lat}, Lon ${lon}<br>
+            🚀 <strong>Current Speed:</strong> ${fakeSpeed} km/h<br>
+            ⏱ <strong>Status:</strong> On Time<br>
+          `;
+        }, 1500);
+      }, () => {
+        loading.style.display = 'none';
+        result.innerHTML = "❌ Unable to access location.";
+      });
+    }
+  </script>
+</body>
+</html>
